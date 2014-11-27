@@ -16,6 +16,7 @@
 
 package com.savillians.gradle.androidpublisher;
 
+import com.android.build.gradle.api.BaseVariantOutput;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.Task;
@@ -97,7 +98,13 @@ public class AndroidPublishTask extends DefaultTask {
 					"Cannot find %s variant for android configuration", variantName));
 		}
 
-		return releaseVariant.getOutputFile();
+		for(BaseVariantOutput output : releaseVariant.getOutputs()) {
+			if (output!=null && output.getName().endsWith(".apk")) {
+				return output.getOutputFile();
+			}
+		}
+		throw new InvalidUserDataException(String.format(
+				"Cannot find APK output file for %s variant", variantName));
 	}
 
 	private void publishApk(AndroidPublisherExtension publisherExtension) {

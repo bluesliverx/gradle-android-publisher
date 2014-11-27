@@ -35,6 +35,10 @@ That will send it to Google Play using the credentials you specified.
 
 # Changelog
 
+### 0.3
+
+* Fix bug with not finding the correct APK file for publishing
+
 ### 0.2
 
 * Compatible with android gradle plugin 0.14

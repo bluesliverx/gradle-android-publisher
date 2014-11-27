@@ -11,9 +11,9 @@ dependencies {
 	compile gradleApi()
 	compile localGroovy()
 
-	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev13-1.+'
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev13-1.19.0'
 	compile 'com.google.oauth-client:google-oauth-client:1.19.0'
 	compile 'com.google.oauth-client:google-oauth-client-jetty:1.19.0'
 
-	compile 'com.android.tools.build:gradle:0.14.+'
+	compile 'com.android.tools.build:gradle:0.14.4'
 }

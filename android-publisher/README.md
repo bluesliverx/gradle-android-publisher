@@ -32,3 +32,13 @@ Make sure the service account you create has "release manager" permissions, down
 ```gradle androidPublish```
 
 That will send it to Google Play using the credentials you specified.
+
+# Changelog
+
+### 0.2
+
+* Compatible with android gradle plugin 0.14
+
+### 0.1
+
+* Initial release

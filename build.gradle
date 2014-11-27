@@ -3,7 +3,8 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.adaptc.gradle:nexus-workflow:0.4'
+		classpath 'com.adaptc.gradle:nexus-workflow:0.6'
+		classpath 'org.codehaus.groovy:groovy-backports-compat23:2.3.6'
 	}
 }
 
@@ -33,23 +34,26 @@ subprojects { proj ->
 	}
 
 	dependencies {
+		compile 'org.codehaus.groovy:groovy-backports-compat23:2.3.6'
 		deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
 		testCompile ("org.spockframework:spock-core:0.7-groovy-1.8") {
 			exclude module:"groovy-all"
 		}
 		compile gradleApi()
-		groovy localGroovy()
+		compile localGroovy()
 	}
 
 	sourceCompatibility = "1.6"
 	targetCompatibility = "1.6"
 
-	manifest.mainAttributes(
-			"Built-By": 'bluesliverx',
-			"Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-			"Implementation-Title": "Savillians Gradle Plugins - "+proj.archivesBaseName,
-			"Implementation-Version": proj.version,
-			"Implementation-Vendor": 'savillians.com')
+	manifest {
+		mainAttributes(
+				"Built-By": 'bluesliverx',
+				"Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+				"Implementation-Title": "Savillians Gradle Plugins - "+proj.archivesBaseName,
+				"Implementation-Version": proj.version,
+				"Implementation-Vendor": 'savillians.com')
+	}
 
 	task sourcesJar(type: Jar) {
 		classifier = 'sources'
@@ -118,6 +122,6 @@ subprojects { proj ->
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.12'
+	gradleVersion = '2.1'
 	jarFile = 'wrapper/wrapper.jar'
 }

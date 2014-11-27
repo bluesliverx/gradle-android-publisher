@@ -99,8 +99,10 @@ public class AndroidPublishTask extends DefaultTask {
 		}
 
 		for(BaseVariantOutput output : releaseVariant.getOutputs()) {
-			if (output!=null && output.getName().endsWith(".apk")) {
-				return output.getOutputFile();
+			if (output!=null) {
+				getLogger().info("Matching output file: "+output.getName());
+				if (output.getName().endsWith(".apk"))
+					return output.getOutputFile();
 			}
 		}
 		throw new InvalidUserDataException(String.format(

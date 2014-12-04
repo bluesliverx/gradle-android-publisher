@@ -60,8 +60,11 @@ public class AndroidPromoteTask extends DefaultTask {
 						publisherExtension.getTrack()),
 				"Track cannot be null or empty!");
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(
-						publisherExtension.getTrack()),
+						publisherExtension.getPromotionTrack()),
 				"Promotion track cannot be null or empty!");
+		Preconditions.checkArgument(!publisherExtension.getTrack()
+						.equals(publisherExtension.getPromotionTrack()),
+				"The publishing track cannot be the same as the promotion track!");
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(
 						publisherExtension.getPackageName()),
 				"Package name cannot be null or empty!");
@@ -89,27 +92,18 @@ public class AndroidPromoteTask extends DefaultTask {
 					.insert(publisherExtension.getPackageName(), null /** no content */);
 			AppEdit edit = editRequest.execute();
 			final String editId = edit.getId();
-			getLogger().info(String.format("Created edit with id: %s", editId));
-
-			// List all tracks
-			Tracks.List list = edits.tracks().list(publisherExtension.getPackageName(), editId);
-			List<Track> tracks = list.execute().getTracks();
+			getLogger().info("Created edit with id: {}", editId);
 
 			// Identify the source and destination tracks
-			Track sourceTrack = null;
-			Track destinationTrack = null;
-			for (Track track : tracks) {
-				if (track.getTrack().equals(publisherExtension.getTrack()))
-					sourceTrack = track;
-				else if (track.getTrack().equals(publisherExtension.getPromotionTrack()))
-					destinationTrack = track;
-			}
+			Tracks.Get get = edits.tracks().get(publisherExtension.getPackageName(),
+					editId, publisherExtension.getTrack());
+			Track sourceTrack = get.execute();
 
 			// Error checking
-			if (sourceTrack==null || destinationTrack==null) {
+			if (sourceTrack==null) {
 				throw new InvalidUserDataException(String.format(
-						"Cannot find the %s or %s track on Google Play, invalid track name?",
-						publisherExtension.getTrack(), publisherExtension.getPromotionTrack()
+						"Cannot find the %s track on Google Play, invalid track name?",
+						publisherExtension.getTrack()
 				));
 			}
 			if (sourceTrack.getVersionCodes().size()==0) {
@@ -120,16 +114,20 @@ public class AndroidPromoteTask extends DefaultTask {
 			}
 			getLogger().info("Using source track {} with version codes {}",
 					sourceTrack.getTrack(), sourceTrack.getVersionCodes());
-			getLogger().info("Using destination track {} with version codes {}",
-					destinationTrack.getTrack(), destinationTrack.getVersionCodes());
+			getLogger().info("Using destination track {} and replacing all version codes",
+					publisherExtension.getPromotionTrack());
 
-			// Find version code to promote, remove from source track and add to destination track
+			// Find version code to promote and remove from source track
 			Integer versionCode = Collections.max(sourceTrack.getVersionCodes());
 			List<Integer> sourceVersionCodes = sourceTrack.getVersionCodes();
-			sourceVersionCodes.remove(versionCode);
+			sourceVersionCodes.remove((Object)versionCode);
 			sourceTrack.setVersionCodes(sourceVersionCodes);
 			List<Integer> destinationVersionCodes = new ArrayList<Integer>();
 			destinationVersionCodes.add(versionCode);
+
+			// Create destination track and set version codes
+			Track destinationTrack = new Track();
+			destinationTrack.setTrack(publisherExtension.getPromotionTrack());
 			destinationTrack.setVersionCodes(destinationVersionCodes);
 			getLogger().info("Promoting version code {}", versionCode);
 
@@ -139,20 +137,19 @@ public class AndroidPromoteTask extends DefaultTask {
 							editId,
 							sourceTrack.getTrack(), sourceTrack);
 			sourceUpdateRequest.execute();
-			getLogger().info(String.format("Source track %s has been updated", sourceTrack.getTrack()));
+			getLogger().info("Source track {} has been updated", sourceTrack.getTrack());
 			Update destinationUpdateRequest = edits
 					.tracks()
 					.update(publisherExtension.getPackageName(),
 							editId,
 							destinationTrack.getTrack(), destinationTrack);
-			getLogger().info(String.format("Destination track %s has been updated",
-					destinationTrack.getTrack()));
+			getLogger().info("Destination track {} has been updated", destinationTrack.getTrack());
 			destinationUpdateRequest.execute();
 
 			// Commit changes for edit.
 			Commit commitRequest = edits.commit(publisherExtension.getPackageName(), editId);
 			AppEdit appEdit = commitRequest.execute();
-			getLogger().info(String.format("App edit with id %s has been committed", appEdit.getId()));
+			getLogger().info("App edit with id {} has been committed", appEdit.getId());
 			getLogger().lifecycle("Version code {} has been promoted from the {} to the {} track",
 					versionCode, sourceTrack.getTrack(), destinationTrack.getTrack());
 		} catch (IOException e) {

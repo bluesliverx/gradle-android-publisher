@@ -36,7 +36,8 @@ public class AndroidPublisherExtension {
 	File serviceAccountKeyFile
 
 	/**
-	 * The name of the variant to use, defaults to "release".
+	 * The name of the variant to use, defaults to "release".  The variant is a combination of the flavor and build
+	 * type and has the format "flavorBuildType", such as "fullRelease".
 	 */
 	String variantName = "release"
 

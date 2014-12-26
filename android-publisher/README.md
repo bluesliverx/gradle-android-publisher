@@ -1,4 +1,5 @@
-A simple gradle plugin that publishes android builds to any track in the Google Play store.  Flavors and variants are supported as well.
+A simple gradle plugin that publishes android builds to any track in the Google Play store.  Flavors and variants
+are supported as well.
 
 To use, add the following to your ```build.gradle``` file:
 
@@ -27,11 +28,23 @@ androidPublisher {
 }
 ```
 
-Make sure the service account you create has "release manager" permissions, download the p12 key file and put it in the project's directory. Then run this command:
+Make sure the service account you create has "release manager" permissions, download the p12 key file and put it in
+the project's directory. Then run this command:
 
 ```gradle androidPublish```
 
 That will send it to Google Play using the credentials you specified.
+
+# Flavors
+
+The `variantName` parameter is a combination of the flavor and build type.  If no flavors are used, it is comprised
+entirely of the build type.  For example, if there are 2 flavors, "full" and "demo", and two build types, "debug" and
+"release", then the potential variant names are:
+
+* fullDebug
+* fullRelease
+* demoDebug
+* demoRelease
 
 # Changelog
 

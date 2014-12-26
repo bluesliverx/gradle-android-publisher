@@ -19,14 +19,11 @@ package com.savillians.gradle.androidpublisher;
 import com.android.build.gradle.api.BaseVariantOutput;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.InvalidUserDataException;
-import org.gradle.api.Task;
 import org.gradle.api.internal.DefaultDomainObjectSet;
 import org.gradle.api.tasks.TaskAction;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,23 +79,24 @@ public class AndroidPublishTask extends DefaultTask {
 		return publisherExtension;
 	}
 
-	private File getReleaseApkFile(AndroidPublisherExtension publisherExtension) {
+	private File getApkFile(AndroidPublisherExtension publisherExtension) {
 		String variantName = publisherExtension.getVariantName();
 		DefaultDomainObjectSet<ApplicationVariant> variants =
 				getProject().getExtensions().getByType(AppExtension.class).getApplicationVariants();
-		ApplicationVariant releaseVariant = null;
-		for (ApplicationVariant variant : variants) {
-			if (variant.getName().equals(variantName)) {
-				releaseVariant = variant;
+		ApplicationVariant variant = null;
+		for (ApplicationVariant v : variants) {
+			if (v.getName().equals(variantName)) {
+				variant = v;
 				break;
 			}
 		}
-		if (releaseVariant == null) {
+		if (variant == null) {
 			throw new InvalidUserDataException(String.format(
 					"Cannot find %s variant for android configuration", variantName));
 		}
 
-		for(BaseVariantOutput output : releaseVariant.getOutputs()) {
+		for(BaseVariantOutput output : variant.getOutputs()) {
+			getLogger().debug("Processing output "+output.getName()+"/"+output.getBaseName());
 			if (output!=null) {
 				return output.getOutputFile();
 			}
@@ -125,9 +123,9 @@ public class AndroidPublishTask extends DefaultTask {
 			getLogger().info(String.format("Created edit with id: %s", editId));
 
 			// Upload new apk to developer console
+			final File apkFile = getApkFile(publisherExtension);
 			final AbstractInputStreamContent apkFileContent =
-					new FileContent(AndroidPublisherHelper.MIME_TYPE_APK,
-							getReleaseApkFile(publisherExtension));
+					new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, apkFile);
 			Upload uploadRequest = edits
 					.apks()
 					.upload(publisherExtension.getPackageName(),

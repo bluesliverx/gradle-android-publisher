@@ -84,11 +84,11 @@ public class AndroidPublishTask extends DefaultTask {
 		DefaultDomainObjectSet<ApplicationVariant> variants =
 				getProject().getExtensions().getByType(AppExtension.class).getApplicationVariants();
 		ApplicationVariant variant = null;
-		getLogger().info("Looking for %s variant in outputs", variantName);
+		getLogger().info(String.format("Looking for %s variant in outputs", variantName));
 		for (ApplicationVariant v : variants) {
-			getLogger().debug("Found variant %s", v.getName());
+			getLogger().debug(String.format("Found variant %s", v.getName()));
 			if (v.getName().equals(variantName)) {
-				getLogger().debug("Variant %s will be used", variantName);
+				getLogger().debug(String.format("Variant %s will be used", variantName));
 				variant = v;
 				break;
 			}
@@ -99,9 +99,9 @@ public class AndroidPublishTask extends DefaultTask {
 		}
 
 		for(BaseVariantOutput output : variant.getOutputs()) {
-			getLogger().debug("Found output %s (%s)", output.getName(), output.getBaseName());
+			getLogger().debug(String.format("Found output %s (%s)", output.getName(), output.getBaseName()));
 			if (output!=null) {
-				getLogger().debug("Output %s will be used", output.getName());
+				getLogger().debug(String.format("Output %s will be used", output.getName()));
 				return output.getOutputFile();
 			}
 		}

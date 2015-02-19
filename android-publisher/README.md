@@ -34,6 +34,8 @@ Make sure the service account you create has "release manager" permissions, down
 the project's directory. Then run this command:
 
 ```gradle androidPublish```
+OR
+```./gradlew androidPublish```
 
 That will send it to Google Play using the credentials you specified.
 

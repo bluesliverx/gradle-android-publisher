@@ -87,11 +87,11 @@ uploadArchives {
 		beforeDeployment { deployment -> signing.signPom(deployment) }
 
 		configuration = configurations.deployerJars
-		repository(url:rootProject."oss-releases.url") {
-			authentication(userName:rootProject."oss-releases.username", password:rootProject."oss-releases.password")
+		repository(url:"https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+			authentication(userName:System.getenv("MAVEN_CENTRAL_USERNAME"), password:System.getenv("MAVEN_CENTRAL_PASSWORD"))
 		}
-		snapshotRepository(url:rootProject."oss-snapshots.url") {
-			authentication(userName:rootProject."oss-snapshots.username", password:rootProject."oss-snapshots.password")
+		snapshotRepository(url:"https://oss.sonatype.org/content/repositories/snapshots") {
+			authentication(userName:System.getenv("MAVEN_CENTRAL_USERNAME"), password:System.getenv("MAVEN_CENTRAL_PASSWORD"))
 		}
 
 		pom {

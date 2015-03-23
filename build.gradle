@@ -11,109 +11,114 @@ buildscript {
 apply plugin:'idea'
 apply plugin:com.adaptc.gradle.nexusworkflow.NexusWorkflowPlugin
 
-subprojects { proj ->
-	group = "com.savillians.gradle"
+archivesBaseName = "android-publisher"
+group = "com.savillians.gradle"
 
-	apply plugin:'java'
-	apply plugin:'groovy'
-	apply plugin:'maven'
-	apply plugin:'signing'
-	apply plugin:'idea'
+apply plugin:'java'
+apply plugin:'groovy'
+apply plugin:'maven'
+apply plugin:'signing'
+apply plugin:'idea'
 
-	configurations {
-		deployerJars
+configurations {
+	deployerJars
+}
+
+configurations.all {
+	// check for updates every build
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-backports-compat23:2.3.6'
+	deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
+	testCompile ("org.spockframework:spock-core:0.7-groovy-1.8") {
+		exclude module:"groovy-all"
 	}
+	compile gradleApi()
+	compile localGroovy()
 
-	configurations.all {
-		// check for updates every build
-		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-	}
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev13-1.19.0'
+	compile 'com.google.oauth-client:google-oauth-client:1.19.0'
+	compile 'com.google.oauth-client:google-oauth-client-jetty:1.19.0'
 
-	repositories {
-		mavenCentral()
-	}
+	compile 'com.android.tools.build:gradle:0.14.4'
+}
 
-	dependencies {
-		compile 'org.codehaus.groovy:groovy-backports-compat23:2.3.6'
-		deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
-		testCompile ("org.spockframework:spock-core:0.7-groovy-1.8") {
-			exclude module:"groovy-all"
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+manifest {
+	mainAttributes(
+			"Built-By": 'bluesliverx',
+			"Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+			"Implementation-Title": "Savillians Gradle Plugins - "+project.archivesBaseName,
+			"Implementation-Version": project.version,
+			"Implementation-Vendor": 'savillians.com')
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives javadocJar
+}
+
+signing {
+	required { !project.version.contains("-SNAPSHOT") }
+	sign configurations.archives
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		beforeDeployment { deployment -> signing.signPom(deployment) }
+
+		configuration = configurations.deployerJars
+		repository(url:rootProject."oss-releases.url") {
+			authentication(userName:rootProject."oss-releases.username", password:rootProject."oss-releases.password")
 		}
-		compile gradleApi()
-		compile localGroovy()
-	}
+		snapshotRepository(url:rootProject."oss-snapshots.url") {
+			authentication(userName:rootProject."oss-snapshots.username", password:rootProject."oss-snapshots.password")
+		}
 
-	sourceCompatibility = "1.6"
-	targetCompatibility = "1.6"
-
-	manifest {
-		mainAttributes(
-				"Built-By": 'bluesliverx',
-				"Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-				"Implementation-Title": "Savillians Gradle Plugins - "+proj.archivesBaseName,
-				"Implementation-Version": proj.version,
-				"Implementation-Vendor": 'savillians.com')
-	}
-
-	task sourcesJar(type: Jar) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	task javadocJar(type: Jar, dependsOn:javadoc) {
-		classifier = 'javadoc'
-		from javadoc.destinationDir
-	}
-
-	artifacts {
-		archives jar
-		archives sourcesJar
-		archives javadocJar
-	}
-
-	signing {
-		required { !proj.version.contains("-SNAPSHOT") }
-		sign configurations.archives
-	}
-
-	uploadArchives {
-		repositories.mavenDeployer {
-			beforeDeployment { deployment -> signing.signPom(deployment) }
-
-			configuration = configurations.deployerJars
-			repository(url:rootProject."oss-releases.url") {
-				authentication(userName:rootProject."oss-releases.username", password:rootProject."oss-releases.password")
-			}
-			snapshotRepository(url:rootProject."oss-snapshots.url") {
-				authentication(userName:rootProject."oss-snapshots.username", password:rootProject."oss-snapshots.password")
-			}
-
-			pom {
-				project {
-					name proj.projectName
-					description proj.projectDescription
-					licenses {
-						license {
-							name "The Apache Software License, Version 2.0"
-							url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-							distribution "repo"
-						}
+		pom {
+			'project' {
+				name project.projectName
+				description project.projectDescription
+				licenses {
+					license {
+						name "The Apache Software License, Version 2.0"
+						url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+						distribution "repo"
 					}
-					url "http://github.com/bluesliverx/savillians-gradle"
-					scm {
-						connection "scm:git:https://github.com/bluesliverx/savillians-gradle.git"
-						developerConnection "scm:git:https://github.com/bluesliverx/savillians-gradle.git"
-						url "http://github.com/bluesliverx/savillians-gradle"
-					}
-					developers {
-						developer {
-							id "bksaville"
-							name "Brian Saville"
-							email "bksaville@gmail.com"
-							organization = "Savillians Tech"
-							organizationUrl "http://savilliantech.blogspot.com"
-							timezone "-7"
-						}
+				}
+				url "http://github.com/bluesliverx/gradle-android-publisher"
+				scm {
+					connection "scm:git:https://github.com/bluesliverx/gradle-android-publisher.git"
+					developerConnection "scm:git:https://github.com/bluesliverx/gradle-android-publisher.git"
+					url "http://github.com/bluesliverx/gradle-android-publisher"
+				}
+				developers {
+					developer {
+						id "bksaville"
+						name "Brian Saville"
+						email "bksaville@gmail.com"
+						organization = "Savillians Tech"
+						organizationUrl "http://savilliantech.blogspot.com"
+						timezone "-7"
 					}
 				}
 			}

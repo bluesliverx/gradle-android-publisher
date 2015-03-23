@@ -15,5 +15,5 @@ env:
   # travis encrypt -a env.global 'MAVEN_CENTRAL_PASSWORD=mypassword'
   # travis encrypt -a env.global 'GITHUB_TOKEN=token' # get the token from https://github.com/settings/applications
   - secure: Qmmcn4ZuGHGFvyxIWjQnJET+XfLt+uQHFDoglF2e3Y/JS3RmZB0v8fJpChry0WsCxaCsubZbY54rE1+RyFvGUy7GDDb5+bAP3MMTiZzNZGpCaWDOSrPs/Kb0imkFa8aHXQx3IJcwNx5y/nnDTU4582jUfcIM+c0Ou62Cf9VYoaA=
-  - secure: DHZrRVGbZvseEwmosAr6Dn0nnyevM8fimgShyyojE4YgTEtGQjlx/+wx4H1VKahhONAsIIOnQnEIKghLwgoc4FtuXX/f3QRXExsHcp+P2n9eyCKrolEIyW8Ciod0Q8GL/9/tnRJVZAJo1th91Y3pjkOKBGiPT6RBT4sGUMz6+FU=
+  - secure: hR+hv0bdne5cChehuq9z63BbkbybIdDP8BLMXjCsaYgUJHGoUS0q+1kW8NsGq49dNJPeRvtNHx38bqylJ8f1Y5EeYX5NPvmTQRWtgbF87BW3K8JKVMWRO8NMQ97h7NF+yvwNVOc5+CQAlbE/D6cr6ICTQhjNkxLQd9jBB2BzztM=
   - secure: dVM+jJNq6YB0o6Fw48aST6oZ7QusSoMoiUBD71/QOW679J1XIQHwaP2RYRqGY5b6A6ub6X7WaSkJ+d569BTL491S7buJxH0+OqSGrduxCxOIkc/9O9eX26WoZtnseKJy2SjclFJaomusLKtvTLrR3nz0SL2sMuAhkCqu0ksbk6o=

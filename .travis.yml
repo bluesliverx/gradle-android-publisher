@@ -5,8 +5,7 @@ branches:
   only:
   - master
   - "/^[0-9.]+.*$/"
-#TODO Add nexusStagingRelease
-script: "./gradlew clean build uploadArchives"
+script: "./travis-build.sh"
 env:
   global:
   - GIT_NAME="Brian Saville"

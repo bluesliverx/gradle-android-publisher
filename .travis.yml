@@ -6,6 +6,9 @@ branches:
   - master
   - "/^[0-9.]+.*$/"
 script: "./travis-build.sh"
+before_install:
+- openssl aes-256-cbc -K $encrypted_ffe22aebe0b8_key -iv $encrypted_ffe22aebe0b8_iv
+  -in maven.gpg.enc -out maven.gpg -d
 env:
   global:
   - GIT_NAME="Brian Saville"
@@ -13,6 +16,10 @@ env:
   # travis encrypt -a env.global 'MAVEN_CENTRAL_USERNAME=myusername'
   # travis encrypt -a env.global 'MAVEN_CENTRAL_PASSWORD=mypassword'
   # travis encrypt -a env.global 'GITHUB_TOKEN=token' # get the token from https://github.com/settings/applications
+  # travis encrypt -a env.global 'SIGNING_KEY_ID=keyId'
+  # travis encrypt -a env.global 'SIGNING_PASSWORD=password'
   - secure: Qmmcn4ZuGHGFvyxIWjQnJET+XfLt+uQHFDoglF2e3Y/JS3RmZB0v8fJpChry0WsCxaCsubZbY54rE1+RyFvGUy7GDDb5+bAP3MMTiZzNZGpCaWDOSrPs/Kb0imkFa8aHXQx3IJcwNx5y/nnDTU4582jUfcIM+c0Ou62Cf9VYoaA=
   - secure: hR+hv0bdne5cChehuq9z63BbkbybIdDP8BLMXjCsaYgUJHGoUS0q+1kW8NsGq49dNJPeRvtNHx38bqylJ8f1Y5EeYX5NPvmTQRWtgbF87BW3K8JKVMWRO8NMQ97h7NF+yvwNVOc5+CQAlbE/D6cr6ICTQhjNkxLQd9jBB2BzztM=
   - secure: dVM+jJNq6YB0o6Fw48aST6oZ7QusSoMoiUBD71/QOW679J1XIQHwaP2RYRqGY5b6A6ub6X7WaSkJ+d569BTL491S7buJxH0+OqSGrduxCxOIkc/9O9eX26WoZtnseKJy2SjclFJaomusLKtvTLrR3nz0SL2sMuAhkCqu0ksbk6o=
+  - secure: N+fM1FFIVamOLsSxhHvy4oCCFYUYCzB4n40X+PH6DCwVNEis9nVEZl821PdnNYfvDxfYryHfOnkrqzc5aGSRcGKNgJiYq1ennyQmKbGzDbr2ojbHEvjti5MmILQ2aFkn543hfm96u7cqjMrdHBVbpetQvtlAex1+Q3PXTHCrNaU=
+  - secure: VHb0gx2A8UOsSk43Vc2ETnL2KGgfRR8ZkMIO3HHoUJYEq8eEGmM6ddvtkWrGJ09Lce8Tsy/GZDSZ6yG3t3+Tbhgdlv1SnquvK5Gb1Yvg3F+WESHIiAuje4IrklJVkOz29lKHPCH9xYDuwgNx9Zu88PeSkAfNneSzweogRR2QO/0=

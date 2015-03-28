@@ -4,10 +4,10 @@ jdk:
 branches:
   only:
   - master
-  - "/^[0-9.]+.*$/"
-script: "./travis-build.sh"
+  - /^[0-9.]+.*$/
+script: ./travis-build.sh
 before_install:
-- openssl aes-256-cbc -K $encrypted_ffe22aebe0b8_key -iv $encrypted_ffe22aebe0b8_iv
+- openssl aes-256-cbc -K $encrypted_7a6591d8b273_key -iv $encrypted_7a6591d8b273_iv
   -in maven.gpg.enc -out maven.gpg -d
 env:
   global:

@@ -52,6 +52,10 @@ entirely of the build type.  For example, if there are 2 flavors, "full" and "de
 
 # Changelog
 
+### 0.5
+
+* Fix issues with latest version of Gradle Android plugin (#6)
+
 ### 0.3
 
 * Fix bug with not finding the correct APK file for publishing

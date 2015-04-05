@@ -17,3 +17,5 @@
 */*.iml
 */*.iws
 */*.ipr
+
+maven.gpg

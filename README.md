@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.savillians.gradle:android-publisher:0.4'
+        classpath 'com.savillians.gradle:android-publisher:0.5+'
         // May need to add guava if you have problems with com.google.common.hash.HashCode.fromString(Ljava/lang/String;)Lcom/google/common/hash/HashCode;
         //classpath 'com.google.guava:guava:18.0'
     }

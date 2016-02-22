@@ -2,7 +2,11 @@ import org.gradle.plugins.signing.Sign
 
 buildscript {
 	repositories {
-		mavenCentral()
+		maven {
+                url "http://maven.grogard.net/content/groups/public/"
+            }
+            jcenter()
+            mavenLocal()
 	}
 	dependencies {
 		classpath 'com.adaptc.gradle:nexus-workflow:0.6'
@@ -32,7 +36,11 @@ configurations.all {
 }
 
 repositories {
-	mavenCentral()
+	maven {
+                url "http://maven.grogard.net/content/groups/public/"
+            }
+            jcenter()
+            mavenLocal()
 }
 
 dependencies {
@@ -48,7 +56,7 @@ dependencies {
 	compile 'com.google.oauth-client:google-oauth-client:1.19.0'
 	compile 'com.google.oauth-client:google-oauth-client-jetty:1.19.0'
 
-	compile 'com.android.tools.build:gradle:0.14.4'
+	compile 'com.android.tools.build:gradle:2.0.0-beta5'
 }
 
 sourceCompatibility = "1.6"

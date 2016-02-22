@@ -18,6 +18,7 @@ package com.savillians.gradle.androidpublisher;
 
 import com.android.build.gradle.api.BaseVariantOutput;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.DomainObjectSet;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.internal.DefaultDomainObjectSet;
 import org.gradle.api.tasks.TaskAction;
@@ -81,8 +82,7 @@ public class AndroidPublishTask extends DefaultTask {
 
 	private File getApkFile(AndroidPublisherExtension publisherExtension) {
 		String variantName = publisherExtension.getVariantName();
-		DefaultDomainObjectSet<ApplicationVariant> variants =
-				getProject().getExtensions().getByType(AppExtension.class).getApplicationVariants();
+		DomainObjectSet<ApplicationVariant> variants = getProject().getExtensions().getByType(AppExtension.class).getApplicationVariants();
 		ApplicationVariant variant = null;
 		getLogger().info(String.format("Looking for %s variant in outputs", variantName));
 		for (ApplicationVariant v : variants) {

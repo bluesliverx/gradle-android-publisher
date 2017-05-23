@@ -3,7 +3,7 @@ are supported as well.
 
 To use, add the following to your ```build.gradle``` file:
 
-```
+``` groovy
 buildscript {
     repositories {
         mavenCentral()
